@@ -20,3 +20,15 @@ It includes monitoring, dashboard access, and custom plugin support — structur
 ---
 
 ## 🏗 Architecture Overview
+
+
+            +------------------+
+            |    Grafana       |  http://localhost:3000
+            +------------------+
+                     ▲
+                     |
+            +------------------+
+            |   Prometheus     |  http://localhost:9090
+            +------------------+
+                     ▲
+                     |
