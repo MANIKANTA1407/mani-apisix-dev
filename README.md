@@ -160,6 +160,6 @@ This repository demonstrates:
 
 ## 👨‍💻 Author
 
-Mani  
+Manikanta Bellam
 API Gateway Engineer  
 Specializing in Kong, APISIX, and Cloud-based API Management
