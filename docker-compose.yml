@@ -1,0 +1,57 @@
+services:
+  etcd:
+    image: quay.io/coreos/etcd:v3.5.11
+    environment:
+      ETCD_UNSUPPORTED_ARCH: amd64
+      ETCD_ADVERTISE_CLIENT_URLS: http://0.0.0.0:2379
+      ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
+    ports:
+      - "2379:2379"
+    volumes:
+      - etcd_data:/etcd-data
+    command: >
+      etcd
+      --data-dir=/etcd-data
+
+  apisix:
+    build: .
+    depends_on:
+      - etcd
+    ports:
+      - "9080:9080"
+      - "9180:9180"
+      - "9091:9091"
+    # volumes:
+    #   - ./conf/config.yaml:/usr/local/apisix/conf/config.yaml
+    #   - ./custom-plugins/header-injector.lua:/usr/local/apisix/apisix/plugins/header-injector.lua:ro
+    #   - ./custom-plugins/custom-file-logger.lua:/usr/local/apisix/apisix/plugins/custom-file-logger.lua:ro
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    depends_on:
+      - apisix
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+
+  apisix-dashboard:
+    image: apache/apisix-dashboard:3.0.1-alpine
+    depends_on:
+      - etcd
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./dashboard_conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml
+
+volumes:
+  etcd_data:
+  grafana_data:
