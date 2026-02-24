@@ -1,5 +1,6 @@
 services:
   etcd:
+    # https://quay.io/repository/coreos/etcd?tab=tags
     image: quay.io/coreos/etcd:v3.5.11
     environment:
       ETCD_UNSUPPORTED_ARCH: amd64
@@ -26,6 +27,8 @@ services:
     #   - ./custom-plugins/header-injector.lua:/usr/local/apisix/apisix/plugins/header-injector.lua:ro
     #   - ./custom-plugins/custom-file-logger.lua:/usr/local/apisix/apisix/plugins/custom-file-logger.lua:ro
   prometheus:
+    # https://hub.docker.com/r/prom/prometheus/tags
+    # https://prometheus.io/docs/introduction/overview/
     image: prom/prometheus:latest
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
@@ -35,6 +38,7 @@ services:
       - apisix
 
   grafana:
+    # https://hub.docker.com/r/grafana/grafana/tags
     image: grafana/grafana:latest
     ports:
       - "3000:3000"
@@ -44,6 +48,7 @@ services:
       - prometheus
 
   apisix-dashboard:
+    # https://hub.docker.com/r/apache/apisix-dashboard/tags
     image: apache/apisix-dashboard:3.0.1-alpine
     depends_on:
       - etcd
